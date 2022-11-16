@@ -1,187 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../entities/Medida.dart';
+  
+void main() {
+  return runApp(History());
+}
+  
 class History extends StatelessWidget {
-  const History({Key? key}) : super(key: key);
-
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Histórico',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: _MyHomePage(),
+    );
+  }
+}
+  
+class _MyHomePage extends StatefulWidget {
+  // ignore: prefer_const_constructors_in_immutables
+  _MyHomePage({Key? key}) : super(key: key);
+  
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+  
+class _MyHomePageState extends State<_MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
         title: const Text(
-          "PROJETO FINAL",
+          "Histórico de Volumes",
           style: TextStyle(
-            color: Color(0xFF0f928c),
+            color: Color.fromARGB(255, 151, 38, 38),
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF0f928c),
+        foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'PROJETO FINAL',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Image.asset('assets/images/Logo.png'),
-            const SizedBox(
-              height: 15,
-            ),
-            const Text('O MELHOR... projeto final!',
-                style: TextStyle(
-                  fontSize: 16,
-                )),
-            const SizedBox(
-              height: 40,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Flexible(
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.note,
-                          color: Color.fromARGB(255, 209, 63, 44),
-                          size: 35,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text('Organização',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.cyan.shade700)),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Center(
-                            child: Text('A Omnimed é uma empresa organizada',
-                                style: TextStyle(fontSize: 16))),
-                      ],
-                    ),
-                  ),
-                ),
-                Flexible(
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.home,
-                          color: Colors.cyan.shade700,
-                          size: 35,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text('Conforto',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.cyan.shade700)),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Center(
-                            child: Text('Realize suas consultas de forma online',
-                                style: TextStyle(fontSize: 16))),
-                      ],
-                    ),
-                  ),
-                ),
-                Flexible(
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.accessibility,
-                          color: Colors.cyan.shade700,
-                          size: 35,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text('Praticidade',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.cyan.shade700)),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Center(
-                            child: Text('Oferecemos inumeros dados e mais',
-                                style: TextStyle(fontSize: 16))),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            const Center(
-              child: Text(
-                'Contato',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Center(
-              child: Text(
-                'Rua: Av marginal, 585, Fazenda Nossa Senhora do Jaguari ',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Center(
-              child: Text(
-                'Email: omnimed@gmail.com ',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Center(
-              child: Text(
-                'Telefone: +55 19987654321',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+        body: SfCartesianChart(
+            primaryXAxis: CategoryAxis(),
+            // Chart title
+            title: ChartTitle(text: 'Litros X Data'),
+            // Enable legend
+            legend: Legend(isVisible: true),
+            // Enable tooltip
+            tooltipBehavior: TooltipBehavior(enable: true),
+            series: <ChartSeries<Medida, String>>[
+              LineSeries<Medida, String>(
+                  dataSource: <Medida>[
+                    Medida('Jan', 10),
+                    Medida('Feb', 25.5),
+                    Medida('Mar', 35.5),
+                    Medida('Apr', 45.5),
+                    Medida('May', 55.5),
+                    Medida('Jun', 65.5)
+                  ],
+                  xValueMapper: (Medida medidas, _) => medidas.data,
+                  yValueMapper: (Medida medidas, _) => medidas.litros,
+                  // Enable data label
+                  dataLabelSettings: DataLabelSettings(isVisible: true))
+            ]));
   }
 }
