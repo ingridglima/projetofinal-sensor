@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   int _indiceAtual = 0;
-  List<Widget> views = [HomeContent(), ControlPanel(), Reservoir(), Doors(), History()];
+  List<Widget> views = [HomeContent(), Reservoir(), History()];
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: Color.fromARGB(255, 151, 38, 38),
           ),
           BottomNavigationBarItem(
-            label: "Painel de Controle",
-            icon: Icon(Icons.airplay),
-            backgroundColor:Color.fromARGB(255, 151, 38, 38),
-          ),
-          BottomNavigationBarItem(
             label: "Nível do Reservatório",
             icon: Icon(Icons.analytics),
-            backgroundColor: Color.fromARGB(255, 151, 38, 38),
-          ),
-          BottomNavigationBarItem(
-            label: "Habilitação das Portas",
-            icon: Icon(Icons.assignment_turned_in),
             backgroundColor: Color.fromARGB(255, 151, 38, 38),
           ),
           BottomNavigationBarItem(

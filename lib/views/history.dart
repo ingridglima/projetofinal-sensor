@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../entities/Medida.dart';
+import '../services/http_service.dart';
   
 void main() {
   return runApp(History());
 }
   
-class History extends StatelessWidget {
+class History extends StatelessWidget{
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,6 +29,21 @@ class _MyHomePage extends StatefulWidget {
 }
   
 class _MyHomePageState extends State<_MyHomePage> {
+
+  final HttpService httpService = HttpService();
+
+  late List<Medida> medidas = [];
+
+   @override
+    initState() {
+      super.initState();
+      getDados();
+    }
+  
+   Future<void> getDados() async{
+    medidas = await httpService.getMedidas();
+   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,25 +62,19 @@ class _MyHomePageState extends State<_MyHomePage> {
         body: SfCartesianChart(
             primaryXAxis: CategoryAxis(),
             // Chart title
-            title: ChartTitle(text: 'Litros X Data'),
+            title: ChartTitle(text: "Litros X Data"),
             // Enable legend
             legend: Legend(isVisible: true),
             // Enable tooltip
             tooltipBehavior: TooltipBehavior(enable: true),
             series: <ChartSeries<Medida, String>>[
               LineSeries<Medida, String>(
-                  dataSource: <Medida>[
-                    Medida('Jan', 10),
-                    Medida('Feb', 25.5),
-                    Medida('Mar', 35.5),
-                    Medida('Apr', 45.5),
-                    Medida('May', 55.5),
-                    Medida('Jun', 65.5)
-                  ],
+                  dataSource: medidas,
                   xValueMapper: (Medida medidas, _) => medidas.data,
                   yValueMapper: (Medida medidas, _) => medidas.litros,
                   // Enable data label
                   dataLabelSettings: DataLabelSettings(isVisible: true))
             ]));
   }
+
 }

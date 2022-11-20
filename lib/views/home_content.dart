@@ -48,68 +48,7 @@ class HomeContent extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Flexible(
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.airplay,
-                          color: Color.fromARGB(255, 151, 38, 38),
-                          size: 35,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text('Painel de Controle',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 151, 38, 38))),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Center(
-                            child: Text('...',
-                                style: TextStyle(fontSize: 16))),
-                      ],
-                    ),
-                  ),
-                ),
-                Flexible(
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.assignment_turned_in,
-                          color: Color.fromARGB(255, 151, 38, 38),
-                          size: 35,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text('Habilitação das Portas',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 151, 38, 38))),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Center(
-                            child: Text('...',
-                                style: TextStyle(fontSize: 16))),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Flexible(
+                 Flexible(
                   child: Container(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -131,7 +70,7 @@ class HomeContent extends StatelessWidget {
                           height: 10,
                         ),
                         const Center(
-                            child: Text('...',
+                            child: Text('Indica, com imagens, o nível atual do reservatório.',
                                 style: TextStyle(fontSize: 16))),
                       ],
                     ),
@@ -159,7 +98,7 @@ class HomeContent extends StatelessWidget {
                           height: 10,
                         ),
                         const Center(
-                            child: Text('...',
+                            child: Text('Indica, através de um gráfico, os resultados das medições considerando Litros X Data.',
                                 style: TextStyle(fontSize: 16))),
                       ],
                     ),
