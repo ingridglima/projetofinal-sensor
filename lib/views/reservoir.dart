@@ -1,36 +1,119 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-class Reservoir extends StatelessWidget {
-  const Reservoir({Key? key}) : super(key: key);
+import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
+import '../entities/Medida.dart';
+import '../services/http_service.dart';
+
+import 'package:flutter/foundation.dart';
+  
+void main() {
+  return runApp(Reservoir());
+}
+  
+class Reservoir extends StatelessWidget{
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Histórico',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: _MyHomePage(),
+    );
+  }
+}
+  
+class _MyHomePage extends StatefulWidget {
+  // ignore: prefer_const_constructors_in_immutables
+  _MyHomePage({Key? key}) : super(key: key);
+  
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+  
+class _MyHomePageState extends State<_MyHomePage> {
+
+  var uri = Uri.http('waterhelp.000webhostapp.com', '/esp-data.php');
+
+  late List<Medida> medidas = [];
+
+  late Medida ultimaMedida = Medida("", 0, "");
+
+  final HttpService httpService = HttpService();
+
+   @override
+    initState() {
+      super.initState();
+      setState(() {
+        getMedidas();
+        debugPrint('saiu do getDados');
+      });
+      
+    }
+
+  Future<void> getMedidas() async {
+
+    Map<String, String> requestHeaders = {
+       'Content-type': 'application/json',
+       'Accept': 'application/json',
+       'Access-Control-Allow-Origin': '*'
+     };
+
+    debugPrint('entrou');
+    Response res = await get(uri, headers: requestHeaders);
+
+    debugPrint('chegou');
+    //debugPrint('TESTE'+res.body);
+
+    if (res.statusCode == 200) {
+
+      dynamic body = jsonDecode(res.body);
+
+      List<dynamic> bodyList = body['result'];
+
+      //debugPrint(bodyList.toString());
+
+      setState(() {
+        medidas = bodyList
+          .map(
+            (dynamic item) => Medida.fromJson(item),
+          )
+          .toList();
+         ultimaMedida = getLast();
+       });
+
+    } else {
+      throw "Unable to retrieve medidas." + res.body;
+    }
+  }
+  
+  Medida getLast(){
+    return medidas.elementAt(0);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
         title: const Text(
-          "PROJETO FINAL",
+          "Nível do Reservatório",
           style: TextStyle(
-            color: Color(0xFF0f928c),
+            color: Color.fromARGB(255, 151, 38, 38),
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF0f928c),
+        foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
+        body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              'PROJETO FINAL',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             const SizedBox(
               height: 15,
             ),
@@ -38,101 +121,12 @@ class Reservoir extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            const Text('O MELHOR... projeto final!',
+            Text(ultimaMedida.data + ' ' + ultimaMedida.litros.toString() + ' ' + ultimaMedida.temperatura.toString(),
                 style: TextStyle(
                   fontSize: 16,
                 )),
             const SizedBox(
               height: 40,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Flexible(
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.note,
-                          color: Color.fromARGB(255, 209, 63, 44),
-                          size: 35,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text('Organização',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.cyan.shade700)),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Center(
-                            child: Text('A Omnimed é uma empresa organizada',
-                                style: TextStyle(fontSize: 16))),
-                      ],
-                    ),
-                  ),
-                ),
-                Flexible(
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.home,
-                          color: Colors.cyan.shade700,
-                          size: 35,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text('Conforto',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.cyan.shade700)),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Center(
-                            child: Text('Realize suas consultas de forma online',
-                                style: TextStyle(fontSize: 16))),
-                      ],
-                    ),
-                  ),
-                ),
-                Flexible(
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.accessibility,
-                          color: Colors.cyan.shade700,
-                          size: 35,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text('Praticidade',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.cyan.shade700)),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Center(
-                            child: Text('Oferecemos inumeros dados e mais',
-                                style: TextStyle(fontSize: 16))),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
             ),
             const SizedBox(
               height: 40,
@@ -182,6 +176,7 @@ class Reservoir extends StatelessWidget {
           ],
         ),
       ),
-    );
+      );
   }
+
 }

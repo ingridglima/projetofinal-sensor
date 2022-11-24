@@ -21,7 +21,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => History());
 
       case "/reservoir":
-        return MaterialPageRoute(builder: (_) => const Reservoir());
+        return MaterialPageRoute(builder: (_) => Reservoir());
 
       case "/doors":
         return MaterialPageRoute(builder: (_) => const Doors());

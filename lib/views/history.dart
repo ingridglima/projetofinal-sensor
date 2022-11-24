@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../entities/Medida.dart';
 import '../services/http_service.dart';
+
+import 'package:flutter/foundation.dart';
   
 void main() {
   return runApp(History());
@@ -30,19 +35,64 @@ class _MyHomePage extends StatefulWidget {
   
 class _MyHomePageState extends State<_MyHomePage> {
 
-  final HttpService httpService = HttpService();
+  var uri = Uri.http('waterhelp.000webhostapp.com', '/esp-data.php');
 
   late List<Medida> medidas = [];
+
+  final HttpService httpService = HttpService();
 
    @override
     initState() {
       super.initState();
-      getDados();
+      setState(() {
+        getMedidas();
+        debugPrint('saiu do getDados');
+      });
+      
     }
+
+  Future<void> getMedidas() async {
+
+    Map<String, String> requestHeaders = {
+       'Content-type': 'application/json',
+       'Accept': 'application/json',
+       'Access-Control-Allow-Origin': '*'
+     };
+
+    debugPrint('entrou');
+    Response res = await get(uri, headers: requestHeaders);
+
+    debugPrint('chegou');
+    //debugPrint('TESTE'+res.body);
+
+    if (res.statusCode == 200) {
+
+      dynamic body = jsonDecode(res.body);
+
+      List<dynamic> bodyList = body['result'];
+
+      //debugPrint(bodyList.toString());
+
+      setState(() {
+        medidas = bodyList
+          .map(
+            (dynamic item) => Medida.fromJson(item),
+          )
+          .toList();
+          debugPrint(medidas.elementAt(0).data);
+          debugPrint(medidas.elementAt(0).litros.toString());
+       });
+
+    } else {
+      throw "Unable to retrieve medidas." + res.body;
+    }
+  }
   
-   Future<void> getDados() async{
-    medidas = await httpService.getMedidas();
-   }
+  //  Future<void> getDados() async{ 
+  //     medidas = await httpService.getMedidas();
+  //     debugPrint('GETDADOS $medidas');
+    
+  //  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +124,9 @@ class _MyHomePageState extends State<_MyHomePage> {
                   yValueMapper: (Medida medidas, _) => medidas.litros,
                   // Enable data label
                   dataLabelSettings: DataLabelSettings(isVisible: true))
-            ]));
+            ])
+            
+      );
   }
 
 }
