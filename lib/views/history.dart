@@ -5,7 +5,6 @@ import 'package:http/http.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../entities/Medida.dart';
-import '../services/http_service.dart';
 
 import 'package:flutter/foundation.dart';
   
@@ -26,7 +25,6 @@ class History extends StatelessWidget{
 }
   
 class _MyHomePage extends StatefulWidget {
-  // ignore: prefer_const_constructors_in_immutables
   _MyHomePage({Key? key}) : super(key: key);
   
   @override
@@ -39,14 +37,11 @@ class _MyHomePageState extends State<_MyHomePage> {
 
   late List<Medida> medidas = [];
 
-  final HttpService httpService = HttpService();
-
    @override
     initState() {
       super.initState();
       setState(() {
         getMedidas();
-        debugPrint('saiu do getDados');
       });
       
     }
@@ -59,19 +54,18 @@ class _MyHomePageState extends State<_MyHomePage> {
        'Access-Control-Allow-Origin': '*'
      };
 
-    debugPrint('entrou');
+    debugPrint('Iniciando requisição HTTP...');
+
     Response res = await get(uri, headers: requestHeaders);
 
-    debugPrint('chegou');
-    //debugPrint('TESTE'+res.body);
 
     if (res.statusCode == 200) {
+
+      debugPrint('Requisição realizada com sucesso...');
 
       dynamic body = jsonDecode(res.body);
 
       List<dynamic> bodyList = body['result'];
-
-      //debugPrint(bodyList.toString());
 
       setState(() {
         medidas = bodyList
@@ -79,20 +73,13 @@ class _MyHomePageState extends State<_MyHomePage> {
             (dynamic item) => Medida.fromJson(item),
           )
           .toList();
-          debugPrint(medidas.elementAt(0).data);
-          debugPrint(medidas.elementAt(0).litros.toString());
        });
 
     } else {
+      debugPrint('Falha na requisição...');
       throw "Unable to retrieve medidas." + res.body;
     }
   }
-  
-  //  Future<void> getDados() async{ 
-  //     medidas = await httpService.getMedidas();
-  //     debugPrint('GETDADOS $medidas');
-    
-  //  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,14 +99,14 @@ class _MyHomePageState extends State<_MyHomePage> {
         body: SfCartesianChart(
             primaryXAxis: CategoryAxis(),
             // Chart title
-            title: ChartTitle(text: "Litros X Data"),
+            title: ChartTitle(text: "Quantidade de Litros do Reservatório de acordo com a Data de Medição"),
             // Enable legend
             legend: Legend(isVisible: true),
             // Enable tooltip
             tooltipBehavior: TooltipBehavior(enable: true),
             series: <ChartSeries<Medida, String>>[
               LineSeries<Medida, String>(
-                  dataSource: medidas,
+                  dataSource: medidas.reversed.toList(),
                   xValueMapper: (Medida medidas, _) => medidas.data,
                   yValueMapper: (Medida medidas, _) => medidas.litros,
                   // Enable data label
