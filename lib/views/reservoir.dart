@@ -210,9 +210,7 @@ class _MyHomePageState extends State<_MyHomePage> {
             ),
             Center(
               child: Text(
-                'Momento da Medição: ' +
-                    DateFormat("dd/MM/yyyy HH:mm:ss")
-                        .format(DateTime.parse(ultimaMedida.data)),
+                'Momento da Medição: ' + ultimaMedida.data,
                 style: const TextStyle(
                   fontSize: 16,
                 ),
