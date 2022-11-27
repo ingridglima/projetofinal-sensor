@@ -8,7 +8,7 @@ class Medida {
 
   factory Medida.fromJson(Map<String, dynamic> json) {
     return Medida(
-      json['data_medicao'] as String,
+      DateTime.parse((json['data_medicao'] as String)).toLocal().toString(),
       double.parse(json['dado_medicao'] as String),
       json['temperatura_chip'] as String,
     );
